@@ -20,5 +20,51 @@ IMG_BIRD = [
 ]
 
 pygame.font.init()
-FONT_POINTS = pygame.font.SysFont("arial", 50)
+FONT_POINTS = pygame.font.SysFont("arial", 25)
 
+class Bird:
+    SPRITES = IMG_BIRD
+    MAX_ROTATE = 25
+    SPEED_ROTATE = 20
+    TIME_ANIMATION = 5
+
+    def __init__(self, x, y):
+        self.x = y
+        self.y = y
+        self.ang = 0
+        self.speed = 0
+        self.height = self.y
+        self.time = 0
+        self.count_mode = 0
+        self.sprite = self.SPRITES[0]
+
+    def jump(self):
+        self.speed = -10.5
+        self.time = 0
+        self.height = self.y
+
+    def move(self):
+        # calcular deslocamento
+        self.time += 1
+        displacement = 1.5 * self.time ** 2 + self.speed * self.time
+
+        # restringir deslocamento
+        if displacement > 16:
+            displacement = 16
+        elif displacement < 0:
+            displacement -= 2
+        self.y += displacement
+
+        # calcular angulo
+        if displacement < 0 or self.y < (self.height + 50):
+            if self.ang < self.MAX_ROTATE:
+                self.ang = self.MAX_ROTATE
+        else:
+            if self.ang > -90:
+                self.ang -= self.SPEED_ROTATE
+
+class Obstacle:
+    pass
+
+class Base:
+    pass
