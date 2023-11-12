@@ -1,16 +1,24 @@
-# This is a sample Python script.
+import pygame
+import os
+import random
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
-
-
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+WIDTH_SCREEN = 500
+HEIGHT_SCREEN = 800
 
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
+def scale(img):
+    return pygame.transform.scale2x(img)
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+
+IMG_OBSTACLE = scale(pygame.image.load(os.path.join("imgs", "pipe.png")))
+IMG_BASE = scale(pygame.image.load(os.path.join("imgs", "base.png")))
+IMG_BACKGROUND = scale(pygame.image.load(os.path.join("imgs", "bg.png")))
+IMG_BIRD = [
+    scale(pygame.image.load(os.path.join("imgs", "bird1.png"))),
+    scale(pygame.image.load(os.path.join("imgs", "bird2.png"))),
+    scale(pygame.image.load(os.path.join("imgs", "bird3.png")))
+]
+
+pygame.font.init()
+FONT_POINTS = pygame.font.SysFont("arial", 50)
+
