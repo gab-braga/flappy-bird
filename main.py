@@ -20,7 +20,7 @@ IMG_BIRD = [
 ]
 
 pygame.font.init()
-FONT_POINTS = pygame.font.SysFont("arial", 25)
+FONT_POINTS = pygame.font.SysFont("arial", 16)
 
 class Bird:
     SPRITES = IMG_BIRD
@@ -29,7 +29,7 @@ class Bird:
     TIME_ANIMATION = 5
 
     def __init__(self, x, y):
-        self.x = y
+        self.x = x
         self.y = y
         self.ang = 0
         self.speed = 0
@@ -90,7 +90,7 @@ class Bird:
         screen.blit(sprite_rotate, node.topleft)
 
     def get_mask(self):
-        pygame.mask.from_surface(self.sprite)
+        return pygame.mask.from_surface(self.sprite)
 
 class Obstacle:
     DISTANCE = 200
@@ -98,7 +98,7 @@ class Obstacle:
     SPRITE_TOP = pygame.transform.flip(IMG_OBSTACLE, False, True)
     SPRITE_BASE = IMG_OBSTACLE
 
-    def __int__(self, x):
+    def __init__(self, x):
         self.x = x
         self.height = 0
         self.pos_top = 0
@@ -117,9 +117,6 @@ class Obstacle:
     def draw(self, screen):
         screen.blit(self.SPRITE_TOP, (self.x, self.pos_top))
         screen.blit(self.SPRITE_BASE, (self.x, self.pos_base))
-
-    def get_mask(self):
-        pygame.mask.from_surface(self.sprite)
 
     def check_collision(self, bird):
         bird_mask = bird.get_mask()
@@ -150,9 +147,9 @@ class Base:
         self.x2 -= self.SPEED
 
         if self.x1 + self.WIDTH < 0:
-            self.x1 += self.WIDTH
+            self.x1 = self.x2 + self.WIDTH
         if self.x2 + self.WIDTH < 0:
-            self.x2 += self.WIDTH
+            self.x2 = self.x1 + self.WIDTH
 
     def draw(self, screen):
         screen.blit(self.SPRITE, (self.x1, self.y))
@@ -179,8 +176,13 @@ def main():
 
     running = True
     while running:
+
+        if len(birds) == 0:
+            running = False
+
         clock.tick(30)
 
+        # captura de eventos
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -190,8 +192,33 @@ def main():
                 for bird in birds:
                     bird.jump()
 
+        # movimentação
+        for bird in birds:
+            bird.move()
+        base.move()
+
+        add_obstacle = False
+        obstacles_remove = []
+        for obstacle in obstacles:
+            for i, bird in enumerate(birds):
+                if obstacle.check_collision(bird):
+                    birds.pop(i)
+                if not obstacle.surpassed and bird.x > obstacle.x:
+                    obstacle.surpassed = add_obstacle = True
+            obstacle.move()
+            if obstacle.x + obstacle.SPRITE_TOP.get_width() < 0:
+                obstacles_remove.append(obstacle)
+        if add_obstacle:
+            points += 1
+            obstacles.append(Obstacle(600))
+        for obstacle in obstacles_remove:
+            obstacles.remove(obstacle)
+
+        for i, bird in enumerate(birds):
+            if bird.y + bird.sprite.get_height() > base.y or bird.y < 0:
+                birds.pop(i)
 
         draw_game(screen, birds, obstacles, base, points)
 
-
-
+if __name__ == "__main__":
+    main()
