@@ -136,4 +136,24 @@ class Obstacle:
 
 
 class Base:
-    pass
+    SPEED = 5
+    WIDTH = IMG_BASE.get_width()
+    SPRITE = IMG_BASE
+
+    def __init__(self, y):
+        self.x1 = 0
+        self.x2 = self.WIDTH
+        self.y = y
+
+    def move(self):
+        self.x1 -= self.SPEED
+        self.x2 -= self.SPEED
+
+        if self.x1 + self.WIDTH < 0:
+            self.x1 += self.WIDTH
+        if self.x2 + self.WIDTH < 0:
+            self.x2 += self.WIDTH
+
+    def draw(self, screen):
+        screen.blit(self.SPRITE, (self.x1, self.y))
+        screen.blit(self.SPRITE, (self.x2, self.y))
