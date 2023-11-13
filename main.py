@@ -63,6 +63,32 @@ class Bird:
             if self.ang > -90:
                 self.ang -= self.SPEED_ROTATE
 
+    def draw(self, screen):
+        # definir a imagem a desenhar
+        self.count_mode += 1
+        if self.count_mode < self.TIME_ANIMATION:
+            self.sprite = self.SPRITES[0]
+        elif self.count_mode < self.TIME_ANIMATION * 2:
+            self.sprite = self.SPRITES[1]
+        elif self.count_mode < self.TIME_ANIMATION * 3:
+            self.sprite = self.SPRITES[2]
+        elif self.count_mode < self.TIME_ANIMATION * 4:
+            self.sprite = self.SPRITES[1]
+        elif self.count_mode < self.TIME_ANIMATION * 4 + 1:
+            self.sprite = self.SPRITES[0]
+            self.count_mode = 0
+
+        # verificar se o passaro cai
+        if self.ang <= -80:
+            self.sprite = self.SPRITES[1]
+            self.count_mode = self.TIME_ANIMATION * 2
+
+        # desenhar o passaro
+        sprite_rotate = pygame.transform.rotate(self.sprite, self.ang)
+        pos_center = self.sprite.get_rect(topleft=(self.x, self.y)).center
+        node = sprite_rotate.get_rect(center=pos_center)
+        screen.blit(sprite_rotate, node.topleft)
+
 class Obstacle:
     pass
 
