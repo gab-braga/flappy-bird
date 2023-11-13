@@ -157,3 +157,14 @@ class Base:
     def draw(self, screen):
         screen.blit(self.SPRITE, (self.x1, self.y))
         screen.blit(self.SPRITE, (self.x2, self.y))
+
+def draw_game(screen, birds, obstacles, base, points):
+    screen.blit(IMG_BACKGROUND, (0, 0))
+    for bird in birds:
+        bird.draw(screen)
+    for obstacle in obstacles:
+        obstacle.draw(screen)
+    base.draw(screen)
+    text = FONT_POINTS.render("PONTUAÇÃO: {}".format(points), 1, (255, 255, 255))
+    screen.blit(text, (WIDTH_SCREEN - 10 - text.get_width(), 10))
+    pygame.display.update()
