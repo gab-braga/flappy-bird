@@ -89,8 +89,51 @@ class Bird:
         node = sprite_rotate.get_rect(center=pos_center)
         screen.blit(sprite_rotate, node.topleft)
 
+    def get_mask(self):
+        pygame.mask.from_surface(self.sprite)
+
 class Obstacle:
-    pass
+    DISTANCE = 200
+    SPEED = 5
+    SPRITE_TOP = pygame.transform.flip(IMG_OBSTACLE, False, True)
+    SPRITE_BASE = IMG_OBSTACLE
+
+    def __int__(self, x):
+        self.x = x
+        self.height = 0
+        self.pos_top = 0
+        self.pos_base = 0
+        self.surpassed = False
+        self.set_height()
+
+    def set_height(self):
+        self.height = random.randrange(50, 450)
+        self.pos_top = self.height - self.SPRITE_TOP.get_height()
+        self.pos_base = self.height + self.DISTANCE
+
+    def move(self):
+        self.x -= self.SPEED
+
+    def draw(self, screen):
+        screen.blit(self.SPRITE_TOP, (self.x, self.pos_top))
+        screen.blit(self.SPRITE_BASE, (self.x, self.pos_base))
+
+    def get_mask(self):
+        pygame.mask.from_surface(self.sprite)
+
+    def check_collision(self, bird):
+        bird_mask = bird.get_mask()
+        top_mask = pygame.mask.from_surface(self.SPRITE_TOP)
+        base_mask = pygame.mask.from_surface(self.SPRITE_BASE)
+
+        distance_top = (self.x - bird.x, self.pos_top - round(bird.y))
+        distance_base = (self.x - bird.x, self.pos_base - round(bird.y))
+
+        top_collision = bird_mask.overlap(top_mask, distance_top)
+        base_collision = bird_mask.overlap(base_mask, distance_base)
+
+        return top_collision or base_collision
+
 
 class Base:
     pass
