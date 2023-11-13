@@ -168,3 +168,30 @@ def draw_game(screen, birds, obstacles, base, points):
     text = FONT_POINTS.render("PONTUAÇÃO: {}".format(points), 1, (255, 255, 255))
     screen.blit(text, (WIDTH_SCREEN - 10 - text.get_width(), 10))
     pygame.display.update()
+
+def main():
+    birds = [Bird(230, 350)]
+    obstacles = [Obstacle(700)]
+    base = Base(730)
+    screen = pygame.display.set_mode((WIDTH_SCREEN, HEIGHT_SCREEN))
+    points = 0
+    clock = pygame.time.Clock()
+
+    running = True
+    while running:
+        clock.tick(30)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+                pygame.quit()
+                quit()
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+                for bird in birds:
+                    bird.jump()
+
+
+        draw_game(screen, birds, obstacles, base, points)
+
+
+
